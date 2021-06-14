@@ -1,4 +1,3 @@
-
 const MongoClient = require('mongodb').MongoClient;
 
 // global variable is to store the database
