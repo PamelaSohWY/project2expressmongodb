@@ -5,7 +5,7 @@ require('dotenv').config()
 const ObjectId = require('mongodb').ObjectId;
 const MongoUtil = require('./MongoUtil')
 
-let db = MongoUtil.connect(process.env.MONGO_URL, "hawkerdb") //database name
+
 
 let app = express();
 
@@ -15,18 +15,26 @@ app.use(express.json());
 // enable CORS 
 app.use(cors())
 
-app.get("/recipes", async (req, res) => {
-    try {
-        let recipes = await db.collection("recipes").find().toArray();
-        res.status(200)
-        res.send(recipes)
-    } catch (e) {
-        res.status(500)
-        res.send(
-            "Unable to get recipes"
-        )
-    }
-})
+//WAS TOLD TO REMOVE ASYNC MAIN FUNCTION //Not line 20 to 175 would be wrapped in Async Function//but it does not work going back to the original
+
+async function main(){
+
+let db = MongoUtil.connect(process.env.MONGO_URL, "recipes") //database name
+
+// app.get("/recipes", async (req, res) => {
+//     try {
+//         let recipes = await db.collection('recipes').find().toArray();
+//         res.status(200)
+//         res.send(recipes)
+//     } catch (e) {
+//         console.log(e)
+//         res.status(500)
+//         console.log(e)
+//         res.send(
+//             "Unable to get recipes"
+//         )
+//     }
+// })
 
 
 
@@ -172,7 +180,10 @@ res.send(
 }
 })
 
+}//end of main
 //end of delete
+
+main()
 
 app.listen(3000, () => {
 
