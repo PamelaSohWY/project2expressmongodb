@@ -5,6 +5,8 @@ require('dotenv').config()
 const ObjectId = require('mongodb').ObjectId;
 const MongoUtil = require('./MongoUtil')
 
+let db = MongoUtil.connect(process.env.MONGO_URL, "hawkerdb") //database name
+
 let app = express();
 
 // enable JSOn as the transfer data format (but is this necessary for Mongo?)
@@ -13,12 +15,20 @@ app.use(express.json());
 // enable CORS 
 app.use(cors())
 
-async function main() {
-    let db = await MongoUtil.connect(process.env.MONGO_URL, "hawkerdb") //database name
+app.get("/recipes", async (req, res) => {
+    try {
+        let recipes = await db.collection("recipes").find().toArray();
+        res.status(200)
+        res.send(recipes)
+    } catch (e) {
+        res.status(500)
+        res.send(
+            "Unable to get recipes"
+        )
+    }
+})
 
-    app.get('/', (req, res) => {
-        res.send('connected!')
-      });
+
 
     //POST a Recipe URL
     //so where is this URL? //Assuming it to be collection name
@@ -55,39 +65,39 @@ async function main() {
 
     app.get('/recipes', async (req, res) => {
         
-        //getUsers?userId=1234&name=Sam
-        //const reqQueryObject =req.query // returns object will all parameters 
-        //const userId = req.query.userId //returns "1234"
-        //const name = req.query.name // returns "Billy"
+    //     //getUsers?userId=1234&name=Sam
+    //     //const reqQueryObject =req.query // returns object will all parameters 
+    //     //const userId = req.query.userId //returns "1234"
+    //     //const name = req.query.name // returns "Billy"
 
-        let hawkerfood = req.query.search;
-        let criteriaofsearch = {}; //object
-        // null results => false 
-        //undefined results => false 
-        //"" => false 
-        if (hawkerfood) {
-            //if food is not null, and not defined and not empty string 
-            //proceed to add it to the critera
+     let hawkerfood = req.query.search;
+     let criteriaofsearch = {}; //object
+    //     // null results => false 
+    //     //undefined results => false 
+    //     //"" => false 
+       if (hawkerfood) {
+    //         //if food is not null, and not defined and not empty string 
+    //         //proceed to add it to the critera
 
-            //understanding : https://docs.mongodb.com/manual/reference/operator/query/regex/
-            //$regex provides regular expression capabilities for pattern matching strings in queries 
-            //option i : case insensitivity to match upper and lower cases 
-            //there are other options to use for matching check later 
+    //         //understanding : https://docs.mongodb.com/manual/reference/operator/query/regex/
+    //         //$regex provides regular expression capabilities for pattern matching strings in queries 
+    //         //option i : case insensitivity to match upper and lower cases 
+    //         //there are other options to use for matching check later 
 
-            criteria['hawkerfood'] = { //when you pass in the item to be searched 
-                '$regex': hawkerfood,
-                '$options': 'i'
+             criteriaofsearch['hawkerfood'] = { //when you pass in the item to be searched 
+                 '$regex': hawkerfood,
+                 '$options': 'i'
 
-            }
-        }
-        // fetch all the search occurrences from database and send back
-        let db = MongoUtil.getDB();
-        let results = await db.collection('hawkerfood').find(criteriaofsearch).toArray();
-        //if req.query.search is a, then it is same as db.collection('a').find("hawkerfood":{$regex:"chicken","$options":"i"})
-        res.send(results);
-        res.status(200)
-        // console.log("line 85")- tested and appears
-    }) //end of get
+          }
+      }
+    //     // fetch all the search occurrences from database and send back
+         let db = MongoUtil.getDB();
+         let results = db.collection('hawkerfood').find(criteriaofsearch).toArray();
+    //     //if req.query.search is a, then it is same as db.collection('a').find("hawkerfood":{$regex:"chicken","$options":"i"})
+       res.send(results);
+         res.status(200)
+     // console.log("line 85")- tested and appears
+     }) //end of get
 
     //edit function 
 
@@ -151,22 +161,18 @@ app.delete("/recipes/:id", async(req,res)=>{
     _id: ObjectId(req.params.id)
 }) 
 res.status(200);
-res.send({
-    "Message": "Deleted Recipe"
-})
+res.send(
+   "Deleted Recipe"
+)
 } catch(e){
     res.status(500)
-    res.send({
-        "Message": "Unable to delete recipe"
-    })
+    res.send(
+        "Unable to delete recipe"
+    )
 }
 })
 
 //end of delete
-
-} // end of main 
-
-main()
 
 app.listen(3000, () => {
 
