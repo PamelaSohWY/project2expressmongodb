@@ -89,6 +89,8 @@ async function main() {
         // console.log("line 85")- tested and appears
     }) //end of get
 
+    //edit function 
+
     app.put('/recipes/:id', async (req, res) => {
         //retrieval of data from the website
         let recipe_name = req.body.recipe_name;
@@ -114,7 +116,7 @@ async function main() {
             "_id": ObjectId(req.params.id)
         }, {
 
-            //20thMayVideo refer
+            //20thMayVideo refer about $set
             "$set": {
                 "recipe_name": recipe_name,
                 "course": course,
@@ -139,6 +141,28 @@ async function main() {
         res.send(results);
 
     }) //end of put
+
+//delete function
+//https://docs.mongodb.com/manual/reference/method/db.collection.deleteOne/
+app.delete("/recipes/:id", async(req,res)=>{
+    
+    try{
+        await db.collection('recipes').deleteOne({
+    _id: ObjectId(req.params.id)
+}) 
+res.status(200);
+res.send({
+    "Message": "Deleted Recipe"
+})
+} catch(e){
+    res.status(500)
+    res.send({
+        "Message": "Unable to delete recipe"
+    })
+}
+})
+
+//end of delete
 
 } // end of main 
 
