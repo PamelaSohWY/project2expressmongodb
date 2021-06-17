@@ -40,7 +40,8 @@ async function main() {
         let service_rating = req.body.service_rating;
         let food_rating = req.body.food_rating; 
         let cleanliness_rating=req.body.cleanliness_rating;
-        let average_price = req.body.average_price
+        let average_price = req.body.average_price;
+
         try {
             let Db = MongoUtil.getDB() // add this to activate function //take note Db is in Capital 
             // this section tell mongo to insert the document 
@@ -60,8 +61,9 @@ async function main() {
                 date_time: date_time,
                 img_url: img_url,
                 service_rating : service_rating,
+                food_rating: food_rating, 
                 cleanliness_rating: cleanliness_rating,
-                avergae_price:average_price
+                average_price:average_price
             }); // end of result
             res.status(200); //200 means ok 
             res.send(result);
@@ -73,7 +75,7 @@ async function main() {
             console.log(e)
         } //end of catch
     }) // end of app.post 
-} //end of main
+
 //Note : Data sent using this endpoint can be retrieved via req.body 
 //This is done when we enable JSON process via app.use (expressJSON)
 // working when connecting to test
@@ -123,6 +125,70 @@ app.get("/locations", async (req, res) => {
     res.send(results);
 
 })
+
+
+
+//PUT Endpoint to edit hawker locations 
+app.put("/locations/:id", async(req,res) => {
+    // this PUT route used is with the assumption will edit all field in the locations document
+
+        let stall_name = req.body.stall_name;
+        let blk_no = req.body.blk_no;
+        let street = req.body.street;
+        let unit = req.body.unit;
+        let postal_code = req.body.postal_code;
+        let opening_hours = req.body.opening_hours;
+        let menu_highlights = req.body.menu_highlights;
+        let stall_owner = req.body.stall_owner;
+        let other_details = req.body.other_details;
+        let location_contributor = req.body.location_contributor
+        let date_time = new Date(req.body.date_time) || new Date();
+        let img_url = req.body.img_url;
+        let service_rating = req.body.service_rating;
+        let food_rating = req.body.food_rating; 
+        let cleanliness_rating=req.body.cleanliness_rating;
+        let average_price = req.body.average_price;
+
+        let Db = MongoUtil.getDB() //need this to activate 
+        let results = await Db.collection("locations").updateOne({
+            _id: ObjectId(req.params.id)
+        }, {
+             $set :{
+                stall_name: stall_name,
+                blk_no: blk_no,
+                street: street,
+                unit: unit,
+                postal_code: postal_code,
+                opening_hours: opening_hours,
+                menu_highlights: menu_highlights,
+                stall_owner: stall_owner,
+                other_details: other_details,
+                location_contributor: location_contributor,
+                date_time: date_time,
+                img_url: img_url,
+                service_rating : service_rating,
+                food_rating: food_rating, 
+                cleanliness_rating: cleanliness_rating,
+                average_price:average_price
+             }
+        })
+        res.send(results);
+});
+
+//Delete Route for Locations Collection 
+app.delete ("/locations/:id", async(req,res)=>{
+    let Db = MongoUtil.getDB()
+    let results = await Db.collection ("locations").remove({
+        _id: ObjectId(req.params.id)
+    });
+    res.status(200);
+    res.send({
+        message: "Ok. Deletion done"      
+    });
+});
+
+
+} //end of main
 
 main()
 
