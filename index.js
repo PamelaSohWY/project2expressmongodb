@@ -15,25 +15,65 @@ app.use(cors())
 
 async function main(){
 
+    await MongoUtil.connect(process.env.MONGO_URL, "hawkerdb") //database name
 
+//For Recipes Collection
 
-app.get("/recipes", async (req, res) => {
-    try {
-         await MongoUtil.connect(process.env.MONGO_URL, "hawkerdb") //database name
-         let db = MongoUtil.getDB()
-        let recipes = await db.collection('recipes').find().toArray();
+// This is the route to retrieve all food records and display all the food records. //Reference source code in NodeJS and Express Lab  
+// app.get("/recipes", async (req, res) => {
+//     try {
+//         let db = MongoUtil.getDB()  //This is to get the connection by calling the getDB function in MongoUtil
+//         let recipes = await db.collection('recipes').find().toArray();
         
-        res.send(recipes)
-        res.status(200)
-    } catch (e) {
-        console.log(e)
-        res.status(500)
-        console.log(e)
-        res.send(
-            "Unable to get recipes"
-        )
-    }
-})
+//         res.send(recipes)
+//         res.status(200)
+//     } catch (e) {
+//         console.log(e)
+//         res.status(500)
+//         console.log(e)
+//         res.send(
+//             "Unable to get recipes"
+//         )
+//     }
+// })   
+// The above can be done 
+
+ app.get('/recipes', async (req, res) => {
+    
+        
+    //     //getUsers?userId=1234&name=Sam
+    //     //const reqQueryObject =req.query // returns object will all parameters 
+    //     //const userId = req.query.userId //returns "1234"
+    //     //const name = req.query.name // returns "Billy"
+
+     let recipes = req.query.search;
+     let criteriaofsearch = {}; //object
+    //     // null results => false 
+    //     //undefined results => false 
+    //     //"" => false 
+       if (recipes) {
+    //         //if food is not null, and not defined and not empty string 
+    //         //proceed to add it to the critera
+
+    //         //understanding : https://docs.mongodb.com/manual/reference/operator/query/regex/
+    //         //$regex provides regular expression capabilities for pattern matching strings in queries 
+    //         //option i : case insensitivity to match upper and lower cases 
+    //         //there are other options to use for matching check later 
+
+             criteriaofsearch['recipes'] = { //when you pass in the item to be searched 
+                 '$regex': recipes,
+                 '$options': 'i'
+
+          }
+      }
+    //     // fetch all the search occurrences from database and send back
+         let db = MongoUtil.getDB();
+         let results = db.collection('recipes').find(criteriaofsearch).toArray();
+    //     //if req.query.search is a, then it is same as db.collection('a').find("hawkerfood":{$regex:"chicken","$options":"i"})
+       res.send(results);
+         res.status(200)
+     // console.log("line 85")- tested and appears
+     }) //end of get
 
 
 
@@ -41,6 +81,7 @@ app.get("/recipes", async (req, res) => {
     //so where is this URL? //Assuming it to be collection name
     app.post("/recipes", async (req, res) => {
         try {
+            let db = MongoUtil.getDB()  //This is to get the 
             let recipe_name = req.body.recipe_name;
             let course = req.body.course;
             let cuisine = req.body.cuisine;
@@ -70,41 +111,7 @@ app.get("/recipes", async (req, res) => {
         } //end of catch 
     }) //end of post
 
-    // app.get('/recipes', async (req, res) => {
-        
-    // //     //getUsers?userId=1234&name=Sam
-    // //     //const reqQueryObject =req.query // returns object will all parameters 
-    // //     //const userId = req.query.userId //returns "1234"
-    // //     //const name = req.query.name // returns "Billy"
-
-    //  let recipes = req.query.search;
-    //  let criteriaofsearch = {}; //object
-    // //     // null results => false 
-    // //     //undefined results => false 
-    // //     //"" => false 
-    //    if (recipes) {
-    // //         //if food is not null, and not defined and not empty string 
-    // //         //proceed to add it to the critera
-
-    // //         //understanding : https://docs.mongodb.com/manual/reference/operator/query/regex/
-    // //         //$regex provides regular expression capabilities for pattern matching strings in queries 
-    // //         //option i : case insensitivity to match upper and lower cases 
-    // //         //there are other options to use for matching check later 
-
-    //          criteriaofsearch['recipes'] = { //when you pass in the item to be searched 
-    //              '$regex': recipes,
-    //              '$options': 'i'
-
-    //       }
-    //   }
-    // //     // fetch all the search occurrences from database and send back
-    //      let db = MongoUtil.getDB();
-    //      let results = db.collection('recipes').find().toArray();
-    // //     //if req.query.search is a, then it is same as db.collection('a').find("hawkerfood":{$regex:"chicken","$options":"i"})
-    //    res.send(results);
-    //      res.status(200)
-    //  // console.log("line 85")- tested and appears
-    //  }) //end of get
+   
 
     //edit function 
 
