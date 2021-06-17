@@ -21,38 +21,34 @@ async function main() {
 
     //The Code is for Hawker Location  
     // Create Hawker Stall - Add using POST method 
-    app.post("/test", async (req, res) => {
+    app.post("/locations", async (req, res) => {
         //contains following information which a document will need 
-        let name=req.body.name //used for testing in location 
-        // let stall_name = req.body.stall_name;
-        // let blk_no = req.body.blk_no;
-        // let street = req.body.street;
-        // let unit = req.body.unit;
-        // let postal_code = req.body.postal_code;
-        // let opening_hours = req.body.opening_hours;
-        // let menu_highlights = req.body.menu_highlights;
-        // let stall_owner = req.body.stall_owner;
-        // let other_details = req.body.other_details;
-        // let location_contributor = req.body.location_contributor
-        // let date_time = new Date(req.body.date_time) || new Date();
+        let stall_name = req.body.stall_name;
+        let blk_no = req.body.blk_no;
+        let street = req.body.street;
+        let unit = req.body.unit;
+        let postal_code = req.body.postal_code;
+        let opening_hours = req.body.opening_hours;
+        let menu_highlights = req.body.menu_highlights;
+        let stall_owner = req.body.stall_owner;
+        let other_details = req.body.other_details;
+        let location_contributor = req.body.location_contributor
+        let date_time = new Date(req.body.date_time) || new Date();
 
         try {
-            let Db = MongoUtil.getDB()  // add this to activate function //take note Db is in Capital 
             // this section tell mongo to insert the document 
-            let result = await Db.collection("test").insertOne({
-
-                    name: name
-                //  stall_name : stall_name,
-                //  blk_no : blk_no,
-                //  street : street,
-                //  unit : unit,
-                //  postal_code : postal_code,
-                //  opening_hours : opening_hours,
-                //  menu_highlights : menu_highlights,
-                //  stall_owner : stall_owner,
-                //  other_details : other_details,
-                //  location_contributor : location_contributor,
-                //  date_time : date_time
+            let result = await Db.collection("locations").insertOne({
+                 stall_name : stall_name,
+                 blk_no : blk_no,
+                 street : street,
+                 unit : unit,
+                 postal_code : postal_code,
+                 opening_hours : opening_hours,
+                 menu_highlights : menu_highlights,
+                 stall_owner : stall_owner,
+                 other_details : other_details,
+                 location_contributor : location_contributor,
+                 date_time : date_time
             }); // end of result
             res.status(200); //200 means ok 
             res.send(result);
@@ -67,7 +63,7 @@ async function main() {
 } //end of main
 //Note : Data sent using this endpoint can be retrieved via req.body 
 //This is done when we enable JSON process via app.use (expressJSON)
-// working when connecting to test
+// 
 
 main()
 
