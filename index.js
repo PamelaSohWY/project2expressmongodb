@@ -35,39 +35,61 @@ async function main() {
         let other_details = req.body.other_details;
         let location_contributor = req.body.location_contributor
         let date_time = new Date(req.body.date_time) || new Date();
-
+        let img_url = req.body.img_url;
         try {
-            let Db = MongoUtil.getDB()  // add this to activate function //take note Db is in Capital 
+            let Db = MongoUtil.getDB() // add this to activate function //take note Db is in Capital 
             // this section tell mongo to insert the document 
             let result = await Db.collection("locations").insertOne({
 
                 //    name: name
-                 stall_name : stall_name,
-                 blk_no : blk_no,
-                 street : street,
-                 unit : unit,
-                 postal_code : postal_code,
-                 opening_hours : opening_hours,
-                 menu_highlights : menu_highlights,
-                 stall_owner : stall_owner,
-                 other_details : other_details,
-                 location_contributor : location_contributor,
-                 date_time : date_time
+                stall_name: stall_name,
+                blk_no: blk_no,
+                street: street,
+                unit: unit,
+                postal_code: postal_code,
+                opening_hours: opening_hours,
+                menu_highlights: menu_highlights,
+                stall_owner: stall_owner,
+                other_details: other_details,
+                location_contributor: location_contributor,
+                date_time: date_time,
+                img_url: img_url
             }); // end of result
             res.status(200); //200 means ok 
             res.send(result);
-        } catch (e) {// end of try //This is an exception handler - to catch for crash/fatal error //handle eroor from mongoDb
-        res.status(500); //500 means fatal area
-        res.send ({
-            error: "Internal server error. Please contact administrator"
-        });
-        console.log(e)
-        }//end of catch
+        } catch (e) { // end of try //This is an exception handler - to catch for crash/fatal error //handle eroor from mongoDb
+            res.status(500); //500 means fatal area
+            res.send({
+                error: "Internal server error. Please contact administrator"
+            });
+            console.log(e)
+        } //end of catch
     }) // end of app.post 
 } //end of main
 //Note : Data sent using this endpoint can be retrieved via req.body 
 //This is done when we enable JSON process via app.use (expressJSON)
 // working when connecting to test
+
+//GET Endpoint to search for hawker locations 
+app.get("/location", async (re, res) => {
+    //this lets a variable criteria to be an empty array 
+    let criteria = {};
+    //This contains the different criterias of search 
+    //for each criteria write a new req.query 
+    //reference to https://docs.mongodb.com/manual/reference/operator/query/regex/ to determine the different options possible 
+    //Possible use for later :db.products.find( { description: { $regex: /m.*line/, $options: 'si' } } )    . Dot Character to Match New Line
+    if (req.query.stall_name) {
+        criteria = {
+            criteria['stall_name'] = {$regex: req.query.description, $options:"i"}
+        } //end of criteria 
+    } //end of stall name query 
+
+    if (req.query.street)
+
+    if (req.query.postal_code)
+
+
+})
 
 main()
 
