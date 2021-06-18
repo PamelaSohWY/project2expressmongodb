@@ -191,61 +191,64 @@ async function main() {
 
         //CREATE ROUTES FOR RECIPES 
 
-        //The Code is for Hawker Location  
+        //The Code is for Recipes  
         // Create Recipes - Add using POST method 
-        // app.post("/recipes", async (req, res) => {
+        app.post("/recipes", async (req, res) => {
         //     //contains following information which a document will need 
         //     //let name=req.body.name //used for testing in location 
-        //     let recipe_name = req.body.stall_name;
-        //     let course = req.body.blk_no;
-        //     let cuisine  = req.body.street;
-        //     let unit = req.body.unit;
-        //     let postal_code = req.body.postal_code;
-        //     let opening_hours = req.body.opening_hours;
-        //     let menu_highlights = req.body.menu_highlights;
-        //     let stall_owner = req.body.stall_owner;
-        //     let other_details = req.body.other_details;
-        //     let location_contributor = req.body.location_contributor
-        //     let date_time = new Date(req.body.date_time) || new Date();
-        //     let img_url = req.body.img_url;
-        //     let service_rating = req.body.service_rating;
-        //     let food_rating = req.body.food_rating; 
-        //     let cleanliness_rating=req.body.cleanliness_rating;
-        //     let average_price = req.body.average_price;
+            let recipe_name = req.body.recipe_name;
+            let course = req.body.course;
+            let cuisine  = req.body.cuisine;
+            let history = req.body.history;
+            let description = req.body.description;
+            let ingredient_part_1 = req.body.ingredient_part_1;
+            let ingredient_part_2  = req.body.ingredient_part_2;
+            let ingredient_part_3 = req.body.ingredient_part_3;
+            let preparation_method = req.body.preparation_method;
+            let preparation_time = req.body.preparation_time;
+            let cooking_method = req.body.cooking_method;
+            let cooking_time = req.body.cookIng_time;
+            let serving_size = req.body.serving_size;
+            let recipe_contributor = req.body.recipe_contributor; 
+            let source_of_recipe =req.body.source_of_recipe;
+            let date = new Date(req.body.date_time) || new Date();
+            let img_url= req.body.img_url
 
-        //     try {
-        //         let Db = MongoUtil.getDB() // add this to activate function //take note Db is in Capital 
-        //         // this section tell mongo to insert the document 
-        //         let result = await Db.collection("locations").insertOne({
+             try {
+                 let Db = MongoUtil.getDB() // add this to activate function //take note Db is in Capital 
+               // this section tell mongo to insert the document 
+               let result = await Db.collection("recipes").insertOne({
 
         //             //    name: name
-        //             stall_name: stall_name,
-        //             blk_no: blk_no,
-        //             street: street,
-        //             unit: unit,
-        //             postal_code: postal_code,
-        //             opening_hours: opening_hours,
-        //             menu_highlights: menu_highlights,
-        //             stall_owner: stall_owner,
-        //             other_details: other_details,
-        //             location_contributor: location_contributor,
-        //             date_time: date_time,
-        //             img_url: img_url,
-        //             service_rating : service_rating,
-        //             food_rating: food_rating, 
-        //             cleanliness_rating: cleanliness_rating,
-        //             average_price:average_price
-        //         }); // end of result
-        //         res.status(200); //200 means ok 
-        //         res.send(result);
-        //     } catch (e) { // end of try //This is an exception handler - to catch for crash/fatal error //handle eroor from mongoDb
-        //         res.status(500); //500 means fatal area
-        //         res.send({
-        //             error: "Internal server error. Please contact administrator"
-        //         });
-        //         console.log(e)
-        //     } //end of catch
-        // }) // end of app.post 
+         recipe_name : recipe_name,
+         course : course,
+         cuisine  : cuisine,
+         history : history,
+         description : description,
+         ingredient_part_1 : ingredient_part_1,
+         ingredient_part_2  : ingredient_part_2,
+         ingredient_part_3 : ingredient_part_3,
+         preparation_method : preparation_method,
+         preparation_time : preparation_time,
+         cooking_method : cooking_method,
+         cooking_time : cookIng_time,
+         serving_size : serving_size,
+         recipe_contributor : recipe_contributor,
+         source_of_recipe : source_of_recipe,
+         date : date_time,
+         img_url : img_url
+
+        }); // end of result
+                 res.status(200); //200 means ok 
+                 res.send(result);
+             } catch (e) { // end of try //This is an exception handler - to catch for crash/fatal error //handle eroor from mongoDb
+                 res.status(500); //500 means fatal area
+                 res.send({
+                     error: "Internal server error. Please contact administrator"
+                 });
+                console.log(e)
+             } //end of catch
+         }) // end of app.post 
 
 
 
@@ -300,8 +303,11 @@ async function main() {
                     res.send(results);
                 })
 
+            //Update Route for Recipes Collection
+            
 
-            //Delete Route for Locations Collection 
+
+            //Delete Route for Recipes Collection 
             app.delete("/recipes/:id", async (req, res) => {
                 let Db = MongoUtil.getDB()
                 let results = await Db.collection("recipes").remove({
