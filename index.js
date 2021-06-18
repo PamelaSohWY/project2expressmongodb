@@ -4,9 +4,7 @@ const cors = require('cors')
 require('dotenv').config()
 const ObjectId = require('mongodb').ObjectId;
 const MongoUtil = require('./MongoUtil');
-const {
-    Db
-} = require('mongodb');
+const Db = require('mongodb');
 const mongoUrl = process.env.MONGO_URL;
 
 let app = express();
@@ -253,8 +251,8 @@ async function main() {
 
 
 
-        //Read Hawker Locations 
-        //GET Endpoint to search for hawker locations 
+        //Read Recipes
+        //GET Endpoint to search for Recipes
         app.get("/recipes", async (req, res) => {
                 //this lets a variable criteria to be an empty array 
                 let criteria = {};
@@ -304,7 +302,55 @@ async function main() {
                 })
 
             //Update Route for Recipes Collection
-            
+              //PUT Endpoint to recipes 
+        app.put("/recipes/:id", async (req, res) => {
+            // this PUT route used is with the assumption will edit all field in the locations document
+
+            let recipe_name = req.body.recipe_name;
+            let course = req.body.course;
+            let cuisine  = req.body.cuisine;
+            let history = req.body.history;
+            let description = req.body.description;
+            let ingredient_part_1 = req.body.ingredient_part_1;
+            let ingredient_part_2  = req.body.ingredient_part_2;
+            let ingredient_part_3 = req.body.ingredient_part_3;
+            let preparation_method = req.body.preparation_method;
+            let preparation_time = req.body.preparation_time;
+            let cooking_method = req.body.cooking_method;
+            let cooking_time = req.body.cookIng_time;
+            let serving_size = req.body.serving_size;
+            let recipe_contributor = req.body.recipe_contributor; 
+            let source_of_recipe =req.body.source_of_recipe;
+            let date = new Date(req.body.date_time) || new Date();
+            let img_url= req.body.img_url
+
+            let Db = MongoUtil.getDB() //need this to activate 
+            let results = await Db.collection("recipes").updateOne({
+                _id: ObjectId(req.params.id)
+            }, {
+                $set: {
+                    recipe_name : recipe_name,
+                    course : course,
+                    cuisine  : cuisine,
+                    history : history,
+                    description : description,
+                    ingredient_part_1 : ingredient_part_1,
+                    ingredient_part_2  : ingredient_part_2,
+                    ingredient_part_3 : ingredient_part_3,
+                    preparation_method : preparation_method,
+                    preparation_time : preparation_time,
+                    cooking_method : cooking_method,
+                    cooking_time : cookIng_time,
+                    serving_size : serving_size,
+                    recipe_contributor : recipe_contributor,
+                    source_of_recipe : source_of_recipe,
+                    date : date_time,
+                    img_url : img_url
+                }
+            })
+            res.send(results);
+        });
+
 
 
             //Delete Route for Recipes Collection 
