@@ -229,11 +229,11 @@ async function main() {
          preparation_method : preparation_method,
          preparation_time : preparation_time,
          cooking_method : cooking_method,
-         cooking_time : cookIng_time,
+         cooking_time : cooking_time,
          serving_size : serving_size,
          recipe_contributor : recipe_contributor,
          source_of_recipe : source_of_recipe,
-         date : date_time,
+         date : date,
          img_url : img_url
 
         }); // end of result
