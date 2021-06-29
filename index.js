@@ -365,6 +365,65 @@ async function main() {
                 });
             });
 
+//GET Endpoint to search for reviews based on recipe id
+app.get("/recipe/reviews/:id", async (req, res) => {
+    // res.send("hello")
+    //this lets a variable criteria to be an empty array 
+    let criteria = {};
+    //This contains the different criterias of search 
+    //for each criteria write a new req.query 
+    //reference to https://docs.mongodb.com/manual/reference/operator/query/regex/ to determine the different options possible 
+    //Possible use for later :db.products.find( { description: { $regex: /m.*line/, $options: 'si' } } )    . Dot Character to Match New Line
+
+    //Search based on recipe_id
+    if (req.params.id) {
+        criteria['recipe_id'] = { //search based on recipe_id
+            $regex: req.params.id,
+            $options: "i"
+        } //end of criteria 
+    } //end of stall name query 
+    
+    //How do you search by recent date criteria ? TODO! 
+
+    //Show results 
+    let Db = MongoUtil.getDB() //need this to activate 
+    let results = await Db.collection("reviews")
+        .find(criteria)
+        .toArray();
+
+    res.status(200);
+    res.send(results);
+});
+
+    //GET Endpoint to search for reviews based on locations id
+app.get("/location/reviews/:id", async (req, res) => {
+    //this lets a variable criteria to be an empty array 
+    let criteria = {};
+    //This contains the different criterias of search 
+    //for each criteria write a new req.query 
+    //reference to https://docs.mongodb.com/manual/reference/operator/query/regex/ to determine the different options possible 
+    //Possible use for later :db.products.find( { description: { $regex: /m.*line/, $options: 'si' } } )    . Dot Character to Match New Line
+
+    // Search based on Street  // note if neccessary change this to general field of address later //TODO!
+    if (req.params.id) {
+        criteria['location_id'] = { //search based on location_id
+            $regex: req.params.id,
+            $options: "i" //change options later TODO!
+        } //end of criteia regex options
+    } //end of street name query 
+      //Show results 
+      let Db = MongoUtil.getDB() //need this to activate 
+      let results = await Db.collection("reviews")
+          .find(criteria)
+          .toArray();
+  
+      res.status(200);
+      res.send(results);
+  
+});
+
+
+
 
 
 
