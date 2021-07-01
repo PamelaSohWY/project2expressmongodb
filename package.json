@@ -8,5 +8,24 @@
     "hbs": "^4.1.2",
     "mongodb": "^3.6.9",
     "wax-on": "^1.2.2"
-  }
+  },
+  "name": "project2expressmongodb",
+  "description": "![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PamelaSohWY/project2expressmongodb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PamelaSohWY/project2expressmongodb/issues"
+  },
+  "homepage": "https://github.com/PamelaSohWY/project2expressmongodb#readme"
 }

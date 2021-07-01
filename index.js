@@ -434,7 +434,7 @@ app.get("/location/reviews/:id", async (req, res) => {
         main()
 
         //Start Server 
-        app.listen(3000, () => {
+        app.listen(process.env.PORT, () => {
             console.log("server started")
         })
 
