@@ -112,6 +112,12 @@ async function main() {
                 }
             } //end of food_quality // for this check later if the 3 quality conditons can be aggregated. 
 
+            if (req.query._id) {
+                criteria = {
+                    "_id" : ObjectId(req.query._id)
+                }
+            } //end of food_quality // for this check later if the 3 quality conditons can be aggregated. 
+
 
             //How do you search by recent date criteria ? TODO! 
 
